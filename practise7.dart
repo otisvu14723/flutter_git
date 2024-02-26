@@ -32,8 +32,14 @@ class Class {
   int _slotMax;
   Set<Student> _listStudent = {};
   int _slotCurrent = 0;
+  int _numberOfSessions;
 
-  Class(this._nameClass, this._slotMax, this._listStudent);
+  Class(this._nameClass, this._slotMax, this._listStudent,
+      this._numberOfSessions) {
+    if (this._numberOfSessions < 10) {
+      throw ArgumentError('Số buổi học không được nhỏ hơn 10');
+    }
+  }
 
   remainMembers() {
     _slotCurrent = _listStudent.length;
@@ -70,12 +76,18 @@ class Class {
 
   int get slotCurrent => _slotCurrent;
 
+  int get numberOfSessions => _numberOfSessions;
+
   set slotCurrent(int value) {
     _slotCurrent = value;
   }
 
   set slotMax(int value) {
     _slotMax = value;
+  }
+
+  set numberOfSessions(int value) {
+    _numberOfSessions = value;
   }
 
   Set<Student> get listStudent => _listStudent;
@@ -86,14 +98,22 @@ class Class {
 }
 
 class Android extends Class {
-  Android(super.nameClass, super.slotMax, super.listStudent);
+  Android(super.nameClass, super.slotMax, super.listStudent,
+      super.numberOfSessions);
+  //   // Đảm bảo số buổi học Android luôn nhiều hơn Flutter 5 buổi
+  //   if (numberOfSessions < flutter  + 5) {
+  //     throw ArgumentError(
+  //         'Số buổi học Flutter phải nhỏ hơn số buổi học Android ít nhất 5 buổi');
+  //   }
+  // }
   void buildAndroid(Class classBA) {
     print("Build Android from ${classBA._nameClass} ");
   }
 }
 
 class Flutter extends Class {
-  Flutter(super.nameClass, super.slotMax, super.listStudent);
+  Flutter(super.nameClass, super.slotMax, super.listStudent,
+      super.numberOfSessions);
   void buildAndroid(Class classBA) {
     print("Build Android from ${classBA._nameClass} ");
   }
@@ -109,19 +129,61 @@ class Flutter extends Class {
   void buildDesktopApp(Class classBDA) {
     print("Build Android from ${classBDA._nameClass} ");
   }
+
+  // int getNum() {
+  //   return _numberOfSessions;
+  // }
 }
 
 class IOS extends Class {
-  IOS(super.nameClass, super.slotMax, super.listStudent);
+  IOS(super.nameClass, super.slotMax, super.listStudent,
+      super.numberOfSessions);
   void buildIOS(Class classBIOS) {
     print("Build Android from ${classBIOS._nameClass} ");
   }
 }
 
-class WebClass extends Class {
-  WebClass(super.nameClass, super.slotMax, super.listStudent);
+class Web extends Class {
+  Web(super.nameClass, super.slotMax, super.listStudent,
+      super.numberOfSessions);
   void buildWeb(Class classBW) {
     print("Build Android from ${classBW._nameClass} ");
+  }
+}
+
+void updateWeb(Flutter f, Android a, IOS i, Web w) {
+  f.numberOfSessions = w.numberOfSessions + 2;
+  a.numberOfSessions = f.numberOfSessions + 5;
+  i.numberOfSessions = a.numberOfSessions + 3;
+}
+
+void updateFlutter(Flutter f, Android a, IOS i, Web w) {
+  if (f.numberOfSessions < 12) {
+    throw ArgumentError('so buoi hoc can cap nhat toi thieu la 12');
+  } else {
+    w.numberOfSessions = f.numberOfSessions - 2;
+    a.numberOfSessions = f.numberOfSessions + 5;
+    i.numberOfSessions = a.numberOfSessions + 3;
+  }
+}
+
+void updateAndroid(Flutter f, Android a, IOS i, Web w) {
+  if (f.numberOfSessions < 17) {
+    throw ArgumentError('so buoi hoc can cap nhat toi thieu la 17');
+  } else {
+    w.numberOfSessions = f.numberOfSessions - 7;
+    f.numberOfSessions = a.numberOfSessions - 5;
+    i.numberOfSessions = a.numberOfSessions + 3;
+  }
+}
+
+void updateIOS(Flutter f, Android a, IOS i, Web w) {
+  if (f.numberOfSessions < 20) {
+    throw ArgumentError('so buoi hoc can cap nhat toi thieu la 20');
+  } else {
+    w.numberOfSessions = f.numberOfSessions - 7;
+    f.numberOfSessions = a.numberOfSessions - 5;
+    i.numberOfSessions = a.numberOfSessions - 3;
   }
 }
 
@@ -141,14 +203,16 @@ void main(List<String> arguments) {
   Set<Student> listStudentWeb = {f};
 
   //khoi tao cac lop hoc
-  Flutter flutter = Flutter("Flutter", 11, listStudentFlutter);
-  Android android = Android("Android", 12, listStudentAndroid);
-  IOS ios = IOS("IOS", 13, listStudentIOS);
-  WebClass web = WebClass("Web", 14, listStudentWeb);
+  Flutter flutter = Flutter("Flutter", 11, listStudentFlutter, 12);
+  Android android = Android("Android", 12, listStudentAndroid, 14);
+  IOS ios = IOS("IOS", 13, listStudentIOS, 15);
+  Web web = Web("Web", 14, listStudentWeb, 10);
 
   //test ham remainMembers()
   print("Số học sinh còn thiếu của lớp Flutter: ${flutter.remainMembers()}");
-
+  updateWeb(flutter, android, ios, web);
+  print(
+      '${flutter.numberOfSessions} ${android.numberOfSessions} ${ios.numberOfSessions} ${web.numberOfSessions}');
   //Them cac hoc sinh con thieu
   flutter.addMembersRandom();
   android.addMembersRandom();
