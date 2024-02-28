@@ -6,7 +6,7 @@ void textField(String text, Function(String?) onChanged) {
 }
 
 void main(List<String> args) {
-  textField('lô concac', (result) {
+  textField('abcccddd', (result) {
     print(result);
   });
 }
